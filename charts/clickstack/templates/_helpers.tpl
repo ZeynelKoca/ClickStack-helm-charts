@@ -46,4 +46,46 @@ Selector labels
 {{- define "clickstack.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "clickstack.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }} 
+{{- end }}
+
+{{/*
+MongoDB CR name
+*/}}
+{{- define "clickstack.mongodb.fullname" -}}
+{{- printf "%s-mongodb" (include "clickstack.fullname" .) -}}
+{{- end }}
+
+{{/*
+MongoDB headless service name (created by the MCK operator as {cr-name}-svc)
+*/}}
+{{- define "clickstack.mongodb.svc" -}}
+{{- printf "%s-svc" (include "clickstack.mongodb.fullname" .) -}}
+{{- end }}
+
+{{/*
+OTEL Collector fullname (matches subchart with alias otel-collector)
+*/}}
+{{- define "clickstack.otel.fullname" -}}
+{{- printf "%s-otel-collector" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+ClickHouse cluster CR name
+*/}}
+{{- define "clickstack.clickhouse.fullname" -}}
+{{- printf "%s-clickhouse" (include "clickstack.fullname" .) -}}
+{{- end }}
+
+{{/*
+ClickHouse Keeper CR name
+*/}}
+{{- define "clickstack.clickhouse.keeper" -}}
+{{- printf "%s-keeper" (include "clickstack.fullname" .) -}}
+{{- end }}
+
+{{/*
+ClickHouse headless service name. The operator creates a headless service named {CR}-clickhouse-headless.
+*/}}
+{{- define "clickstack.clickhouse.svc" -}}
+{{- printf "%s-clickhouse-headless" (include "clickstack.clickhouse.fullname" .) -}}
+{{- end }}
